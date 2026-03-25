@@ -1,29 +1,45 @@
-use crate::data_structures::array::StaticArray;
+use data_structures::linked_list::SinglyLinkedList;
 
 pub mod algorithms;
 pub mod data_structures;
 
 fn main() {
-    let mut sorted_array = StaticArray::new();
+    // let mut sorted_array = StaticArray::new();
+    //
+    // for i in 0..10 {
+    //     println!("pushed {i + 1}");
+    //     sorted_array.push(i + 1).expect("Error pushing");
+    // }
+    //
+    // println!("{}", sorted_array.is_empty());
+    //
+    // if let Some(value) = sorted_array.pop() {
+    //     println!("popped {value}");
+    // } else {
+    //     eprintln!("Stack is empty");
+    // }
+    //
+    // if let Some(value) = sorted_array.get(1) {
+    //     println!("index[1] = {value}")
+    // } else {
+    //     eprintln!("Index out of bounds")
+    // }
+    //
+    // println!("{:?}", sorted_array.delete_at(0));
 
-    for i in 0..10 {
-        println!("pushed {}", i + 1);
-        sorted_array.push(i + 1).expect("Error pushing");
-    }
+    let mut linked_list = SinglyLinkedList::new();
 
-    println!("{}", sorted_array.is_empty());
+    linked_list.push_back(1);
+    linked_list.push_back(2);
+    linked_list.push_back(3);
+    linked_list.push_back(4);
+    linked_list.push_back(5);
+    linked_list.push_back(6);
 
-    if let Some(value) = sorted_array.pop() {
-        println!("popped {}", value);
-    } else {
-        eprintln!("Stack is empty");
-    }
+    linked_list.print();
 
-    if let Some(value) = sorted_array.get(1) {
-        println!("index[1] = {}", value)
-    } else {
-        eprintln!("Index out of bounds")
-    }
+    println!("{}", linked_list.contains(1)); // Should work
+    println!("{}", linked_list.contains(7)); // should fail
 
-    println!("{:?}", sorted_array.delete_at(0));
+    println!("{}", linked_list.contains(0));
 }
