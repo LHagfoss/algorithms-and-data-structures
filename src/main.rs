@@ -43,12 +43,12 @@ fn main() {
     //
     // println!("{}", linked_list.contains(0));
 
-    let mut simple_hash_map = SimpleHashMap::new(10);
+    let mut simple_hash_map: SimpleHashMap<String, i32> = SimpleHashMap::new();
 
-    simple_hash_map.insert("lucas".into(), 18);
-    simple_hash_map.insert("herman".into(), 18);
-    simple_hash_map.insert("saga".into(), 17);
-    simple_hash_map.insert("jp".into(), 19);
+    simple_hash_map.insert("lucas".to_string(), 18);
+    simple_hash_map.insert("herman".to_string(), 18);
+    simple_hash_map.insert("saga".to_string(), 17);
+    simple_hash_map.insert("jp".to_string(), 19);
 
     if let Some(age) = simple_hash_map.get("lucas") {
         println!("{}", age);

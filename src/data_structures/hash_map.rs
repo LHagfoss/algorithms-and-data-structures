@@ -1,77 +1,110 @@
 use std::hash::{DefaultHasher, Hash, Hasher};
+use std::mem;
+use std::borrow::Borrow;
 
-#[derive(Clone, Debug)]
-struct Entry {
-    key: String,
-    value: i32,
+#[derive(Debug)]
+struct Entry<K, V> {
+    key: K,
+    value: V,
 }
 
-pub struct SimpleHashMap {
-    buckets: Vec<Vec<Entry>>,
+pub struct SimpleHashMap<K, V> {
+    buckets: Vec<Vec<Entry<K, V>>>,
     num_entries: usize,
 }
 
-impl SimpleHashMap {
-    pub fn new(capacity: usize) -> Self {
+impl <K, V> SimpleHashMap<K, V>
+where
+    K: Hash + Eq,
+{
+    pub fn new() -> Self {
         SimpleHashMap {
-            buckets: vec![Vec::new(); capacity],
+            buckets: (0..16).map(|_| Vec::new()).collect(),
             num_entries: 0,
         }
     }
 
-    pub fn hash_key(&self, key: &str) -> usize {
+    fn get_bucket_index<Q>(key: &Q, capacity: usize) -> usize
+    where
+        Q: Hash + ?Sized,
+    {
         let mut hasher = DefaultHasher::new();
-
         key.hash(&mut hasher);
-
-        let hash_value = hasher.finish() as usize;
-
-        hash_value % self.buckets.len()
+        (hasher.finish() as usize) % capacity
     }
 
-    pub fn insert(&mut self, key: String, value: i32) {
-        if self.num_entries >= self.buckets.capacity() {
-            return;
+    pub fn insert(&mut self, key: K, value: V) -> Option<V> {
+        if self.num_entries >= self.buckets.len() * 3 / 4 {
+            self.resize();
         }
 
-        let index = self.hash_key(&key);
+        let index = Self::get_bucket_index(&key, self.buckets.len());
         let bucket = &mut self.buckets[index];
 
         for entry in bucket.iter_mut() {
             if entry.key == key {
-                entry.value = value;
-                
-                return;
+                return Some(mem::replace(&mut entry.value, value));
             }
         }
 
         bucket.push(Entry { key, value });
         self.num_entries += 1;
+        None
     }
 
-    pub fn get(&self, key: &str) -> Option<i32> {
-        let index = self.hash_key(key);
+    pub fn get<Q>(&self, key: &Q) -> Option<&V>
+    where
+        K: Borrow<Q>,
+        Q: Hash + Eq + ?Sized,
+    {
+        let index = Self::get_bucket_index(key, self.buckets.len());
         let bucket = &self.buckets[index];
 
-        for entry in bucket.iter() {
-            if entry.key == key {
-                return Some(entry.value);
+        for entry in bucket {
+            if entry.key.borrow() == key {
+                return Some(&entry.value);
             }
         }
 
         None
     }
 
-    pub fn remove(&mut self, key: &str) -> bool {
-        let index = self.hash_key(key);
+    pub fn remove<Q>(&mut self, key: &Q) -> Option<V>
+    where
+        K: Borrow<Q>,
+        Q: Hash + Eq + ?Sized,
+    {
+        let index = Self::get_bucket_index(key, self.buckets.len());
         let bucket = &mut self.buckets[index];
 
-        if let Some(pos) = bucket.iter().position(|e| e.key == key) {
-            bucket.remove(pos);
+        if let Some(pos) = bucket.iter().position(|e| e.key.borrow() == key) {
+            let entry = bucket.remove(pos);
             self.num_entries -= 1;
-            return true
+            return Some(entry.value);
         }
 
-        false
+        None
+    }
+
+    fn resize(&mut self) {
+        let new_capacity = self.buckets.len() * 2;
+        let mut new_buckets: Vec<Vec<Entry<K, V>>> = (0..new_capacity).map(|_| Vec::new()).collect();
+
+        for bucket in self.buckets.iter_mut() {
+            for entry in bucket.drain(..) {
+                let new_index = Self::get_bucket_index(&entry.key, new_capacity);
+                new_buckets[new_index].push(entry);
+            }
+        }
+
+        self.buckets = new_buckets;
+    }
+
+    pub fn len(&self) -> usize {
+        self.num_entries
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.num_entries == 0
     }
 }
