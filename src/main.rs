@@ -1,4 +1,4 @@
-use data_structures::linked_list::SinglyLinkedList;
+use crate::data_structures::hash_map::SimpleHashMap;
 
 pub mod algorithms;
 pub mod data_structures;
@@ -27,19 +27,42 @@ fn main() {
     //
     // println!("{:?}", sorted_array.delete_at(0));
 
-    let mut linked_list = SinglyLinkedList::new();
+    // let mut linked_list = SinglyLinkedList::new();
+    //
+    // linked_list.push_back(1);
+    // linked_list.push_back(2);
+    // linked_list.push_back(3);
+    // linked_list.push_back(4);
+    // linked_list.push_back(5);
+    // linked_list.push_back(6);
+    //
+    // linked_list.print();
+    //
+    // println!("{}", linked_list.contains(1)); // Should work
+    // println!("{}", linked_list.contains(7)); // should fail
+    //
+    // println!("{}", linked_list.contains(0));
 
-    linked_list.push_back(1);
-    linked_list.push_back(2);
-    linked_list.push_back(3);
-    linked_list.push_back(4);
-    linked_list.push_back(5);
-    linked_list.push_back(6);
+    let mut simple_hash_map = SimpleHashMap::new(10);
 
-    linked_list.print();
+    simple_hash_map.insert("lucas".into(), 18);
+    simple_hash_map.insert("herman".into(), 18);
+    simple_hash_map.insert("saga".into(), 17);
+    simple_hash_map.insert("jp".into(), 19);
 
-    println!("{}", linked_list.contains(1)); // Should work
-    println!("{}", linked_list.contains(7)); // should fail
+    if let Some(age) = simple_hash_map.get("lucas") {
+        println!("{}", age);
+    }
 
-    println!("{}", linked_list.contains(0));
+    if let Some(age) = simple_hash_map.get("saga") {
+        println!("{}", age);
+    }
+
+    simple_hash_map.remove("lucas");
+
+    if let Some(age) = simple_hash_map.get("lucas") {
+        println!("{}", age);
+    } else {
+        println!("no existo");
+    }
 }
