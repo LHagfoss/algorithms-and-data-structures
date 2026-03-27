@@ -84,6 +84,9 @@ fn main() {
 
     if let Some(exists) = binary_search_tree.max() {
         println!("max {}", exists);
-
     }
+
+    println!("{} nodes", binary_search_tree.node_count());
+
+    binary_search_tree.print_in_order();
 }

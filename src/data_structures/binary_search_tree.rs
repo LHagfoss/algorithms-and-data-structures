@@ -108,4 +108,18 @@ impl<T: Ord> BinarySearchTree<T> {
 
         None
     }
+
+    pub fn node_count(&self) -> usize {
+        Self::node_count_recursive(&self.root)
+    }
+
+    fn node_count_recursive(node: &Option<Box<Node<T>>>) -> usize {
+        match node {
+            None => 0,
+            Some(current_node) => {
+                1 + Self::node_count_recursive(&current_node.left)
+                    + Self::node_count_recursive(&current_node.right)
+            }
+        }
+    }
 }
