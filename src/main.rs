@@ -1,4 +1,4 @@
-use crate::data_structures::hash_map::SimpleHashMap;
+use crate::data_structures::binary_search_tree::BinarySearchTree;
 
 pub mod algorithms;
 pub mod data_structures;
@@ -43,26 +43,47 @@ fn main() {
     //
     // println!("{}", linked_list.contains(0));
 
-    let mut simple_hash_map: SimpleHashMap<String, i32> = SimpleHashMap::new();
+    // let mut simple_hash_map: SimpleHashMap<String, i32> = SimpleHashMap::new();
+    //
+    // simple_hash_map.insert("lucas".to_string(), 18);
+    // simple_hash_map.insert("herman".to_string(), 18);
+    // simple_hash_map.insert("saga".to_string(), 17);
+    // simple_hash_map.insert("jp".to_string(), 19);
+    //
+    // if let Some(age) = simple_hash_map.get("lucas") {
+    //     println!("{}", age);
+    // }
+    //
+    // if let Some(age) = simple_hash_map.get("saga") {
+    //     println!("{}", age);
+    // }
+    //
+    // simple_hash_map.remove("lucas");
+    //
+    // if let Some(age) = simple_hash_map.get("lucas") {
+    //     println!("{}", age);
+    // } else {
+    //     println!("no existo");
+    // }
 
-    simple_hash_map.insert("lucas".to_string(), 18);
-    simple_hash_map.insert("herman".to_string(), 18);
-    simple_hash_map.insert("saga".to_string(), 17);
-    simple_hash_map.insert("jp".to_string(), 19);
+    let mut binary_search_tree: BinarySearchTree<i32> = BinarySearchTree::new();
 
-    if let Some(age) = simple_hash_map.get("lucas") {
-        println!("{}", age);
+    binary_search_tree.insert(5);
+    binary_search_tree.insert(10);
+    binary_search_tree.insert(20);
+    binary_search_tree.insert(15);
+    binary_search_tree.insert(3);
+    binary_search_tree.insert(8);
+
+    println!("{}", binary_search_tree.search(5)); // true
+    println!("{}", binary_search_tree.search(7)); // false
+
+    if let Some(exists) = binary_search_tree.min() {
+        println!("min {}", exists);
     }
 
-    if let Some(age) = simple_hash_map.get("saga") {
-        println!("{}", age);
-    }
+    if let Some(exists) = binary_search_tree.max() {
+        println!("max {}", exists);
 
-    simple_hash_map.remove("lucas");
-
-    if let Some(age) = simple_hash_map.get("lucas") {
-        println!("{}", age);
-    } else {
-        println!("no existo");
     }
 }
